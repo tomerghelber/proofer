@@ -38,12 +38,13 @@ def parse_line(line: str):
     points = parse_points(points_string)
     if shape == 'line':
         if len(points) < 2:
-            raise ValueError('The shape triangle should have exactly 3 points')
+            raise ValueError("The shape 'line' should have 2 points or more")
         return set(chain(
             map(lambda points: Line(*points), combinations(points, 2)),
             map(lambda points: Angle(*points), combinations(points, 3)),
             points
         ))
-    if shape == 'triangle':
-        if len(points) != 3:
-            raise ValueError('The shape triangle should have exactly 3 points')
+    elif shape == 'polygon':
+        if len(points) < 2:
+            raise ValueError("The shape 'polygon' should have 3 points or more")
+        return points
