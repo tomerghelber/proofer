@@ -31,5 +31,5 @@ def test_SumAngles(sqlalchemy_information, memory_engine):
     
     sqlalchemy_information.execute(tested_rule)
     with memory_engine.connect() as connection:
-        result = connection.execute(Angle.select(), {'point1': point1, 'angle_point': angle_point, 'point2': point2, 'size': size1 + sizes})
+        result = connection.execute(Angle.select(), {'point1': point1, 'angle_point': angle_point, 'point2': point2, 'size': size1 + size2})
         assert 1 == len(result)
