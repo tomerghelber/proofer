@@ -49,7 +49,7 @@ def parse_line(line: str):
             points
         ))
     elif shape == 'polygon':
-        if len(points) < 2:
+        if len(points) < 3:
             raise ValueError("The shape 'polygon' should have 3 points or more")
         return set(chain(
             [Line(points[i], points[(i + 1) % len(points)]) for i in range(len(points))],
