@@ -32,7 +32,7 @@ def is_same_line(l1: Line, l2: Line):
 def parse_points(points_string: str) -> typing.Sequence[Point]:
     parsed = list(map(Point, points_string.split(',')))
     result = OrderedSet(parsed)
-    if len(parsed) != lenresult):
+    if len(parsed) != len(result):
         raise ValueError("The same point is used in the element: " + str(parsed))
     return result
 
