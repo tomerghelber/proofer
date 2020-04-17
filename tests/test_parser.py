@@ -1,10 +1,10 @@
 import operator as op
 from functools import reduce
-from random import randint
 
 import pytest
 
 from proofer import parse_line, Point, Line
+
 
 def nCk(n: int, k: int) -> float:
     if n < k:
@@ -13,16 +13,6 @@ def nCk(n: int, k: int) -> float:
     numer = reduce(op.mul, range(n, n - k, -1), 1)
     denom = reduce(op.mul, range(1, k + 1), 1)
     return numer / denom
-
-
-def test_parse_line_2_points():
-    paresd = parse_line('line A,B')
-
-    point_a = Point("A")
-    point_b = Point("B")
-    expected = set([point_a, point_b, Line(point_a, point_b)])
-
-    assert expected == paresd
 
 
 @pytest.mark.parametrize("number_of_points", range(2, 12))
