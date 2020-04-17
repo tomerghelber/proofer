@@ -43,18 +43,6 @@ def parse_line(line: str):
         else:
             raise ValueError('The shape triangle should have exactly 3 points')
 
-import unittest
-
-class TestParserMethods(unittest.TestCase):
-    def test_parse_line_2_points(self):
-        paresd = parse_line('line A,B')
-
-        expected = set([Point("A"), Point("B"), Line(point_a, point_b)])
-
-        self.assertEqual(
-
-    def test_parse_triangle(self):
-        pass
 
 def main():
     point_a = Point("A")
