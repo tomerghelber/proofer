@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import contextlib
 
 from sqlalchemy import Column, String, Float, CheckConstraint, create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -41,5 +42,5 @@ class SqlAlchemyInformation(Information):
         self.__Session = sessionmaker(bind=engine)
 
     def execute(self, rule):
-        with self.__Session() as session:
+        with contextlib.closing(self.__Session()) as session:
             rule.execute(session)
