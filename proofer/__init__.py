@@ -30,7 +30,11 @@ def is_same_line(l1: Line, l2: Line):
 
 
 def parse_points(points_string: str) -> typing.Sequence[Point]:
-    return OrderedSet(map(Point, points_string.split(',')))
+    parsed = list(map(Point, points_string.split(',')))
+    result = OrderedSet(parsed)
+    if len(parsed) != lenresult):
+        raise ValueError("The same point is used in the element: " + str(parsed))
+    return result
 
 
 def parse_line(line: str):
@@ -47,4 +51,8 @@ def parse_line(line: str):
     elif shape == 'polygon':
         if len(points) < 2:
             raise ValueError("The shape 'polygon' should have 3 points or more")
-        return points
+        return set(chain(
+            map(lambda points: Line(*points), combinations(points, 2)),
+            map(lambda points: Angle(*points), combinations(points, 3)),
+            points
+        ))
