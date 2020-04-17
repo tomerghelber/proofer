@@ -5,7 +5,7 @@ import typing
 from sqlalchemy import and_
 from sqlalchemy.orm import Query, aliased
 
-from informations import Angle, Line
+from proofer.informations import Angle, Line
 
           
 class Rule(ABC):
