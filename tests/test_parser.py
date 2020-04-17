@@ -1,6 +1,6 @@
 import operator as op
 from functools import reduce
-from random import randomint
+from random import randint
 
 from proofer import parse_line, Point, Line
 
