@@ -6,7 +6,7 @@ from proofer.informations import SqlAlchemyInformation, Line, Angle
 
 @pytest.fixture
 def memory_engine():
-    return create_engine('sqlite:///:memory:', echo=True)
+    return create_engine('sqlite:///:memory:')
 
 
 @pytest.fixture
@@ -40,6 +40,6 @@ def test_sqlalchemy_information_double_insert_angle(tested_sqlalchemy_informatio
             session.commit()
 
     rule = DummyRule()
-    with pytest.raises(IntegrityError)
+    with pytest.raises(IntegrityError):
         tested_sqlalchemy_information.execute(rule)
         tested_sqlalchemy_information.execute(rule)
