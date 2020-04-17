@@ -47,19 +47,3 @@ def parse_line(line: str):
     if shape == 'triangle':
         if len(points) != 3:
             raise ValueError('The shape triangle should have exactly 3 points')
-
-
-def main():
-    point_a = Point("A")
-    point_b = Point("B")
-    point_c = Point("C")
-    line_ab = Line(point_a, point_b)
-    line_bc = Line(point_b, point_c)
-    line_ac = Line(point_a, point_c)
-    hand = set([point_a, point_b, point_c, line_ab, line_bc, line_ac])
-    paresd = parse_line('triangle A,B,C')
-    assert hand == paresd
-
-
-if __name__ == "__main__":
-    main()
