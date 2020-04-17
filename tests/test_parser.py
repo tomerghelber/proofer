@@ -38,7 +38,7 @@ def test_parse_polygon(number_of_points):
 
     expected_number_of_objects = 0
 
-    assert expected_number_of_objects == len(paresd)
+    assert expected_number_of_objects == len(parsed)
 
 
 @pytest.mark.parametrize("number_of_points", range(3))
