@@ -36,7 +36,7 @@ class Angle(Base):
 
 
 class SqlAlchemyInformation(Information):
-    def __init__(self, engine = create_engine('sqlite:///:memory:', echo=True)):
+    def __init__(self, engine):
         Base.metadata.create_all(engine)
         self.__Session = sessionmaker(bind=engine)
 
