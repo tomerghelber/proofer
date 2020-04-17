@@ -31,7 +31,8 @@ def test_sqlalchemy_information_insert_line_point1_expected(tested_sqlalchemy_in
             session.commit()
 
     rule = DummyRule()
-    tested_sqlalchemy_information.execute(rule)
+    with pytest.raises(IntegrityError):
+        tested_sqlalchemy_information.execute(rule)
 
 
 def test_sqlalchemy_information_insert_line_point2_expected(tested_sqlalchemy_information):
@@ -41,7 +42,8 @@ def test_sqlalchemy_information_insert_line_point2_expected(tested_sqlalchemy_in
             session.commit()
 
     rule = DummyRule()
-    tested_sqlalchemy_information.execute(rule)
+    with pytest.raises(IntegrityError):
+        tested_sqlalchemy_information.execute(rule)
 
 
 def test_sqlalchemy_information_insert_angle_size_negative(tested_sqlalchemy_information):
@@ -84,7 +86,8 @@ def test_sqlalchemy_information_insert_angle_point1_expected(tested_sqlalchemy_i
             session.commit()
 
     rule = DummyRule()
-    tested_sqlalchemy_information.execute(rule)
+    with pytest.raises(IntegrityError):
+        tested_sqlalchemy_information.execute(rule)
 
 
 def test_sqlalchemy_information_insert_angle_angle_point_expected(tested_sqlalchemy_information):
@@ -94,7 +97,8 @@ def test_sqlalchemy_information_insert_angle_angle_point_expected(tested_sqlalch
             session.commit()
 
     rule = DummyRule()
-    tested_sqlalchemy_information.execute(rule)
+    with pytest.raises(IntegrityError):
+        tested_sqlalchemy_information.execute(rule)
 
 
 def test_sqlalchemy_information_insert_angle_point2_expected(tested_sqlalchemy_information):
@@ -104,7 +108,8 @@ def test_sqlalchemy_information_insert_angle_point2_expected(tested_sqlalchemy_i
             session.commit()
 
     rule = DummyRule()
-    tested_sqlalchemy_information.execute(rule)
+    with pytest.raises(IntegrityError):
+        tested_sqlalchemy_information.execute(rule)
 
 
 def test_sqlalchemy_information_insert_angle_size_negative(tested_sqlalchemy_information):
