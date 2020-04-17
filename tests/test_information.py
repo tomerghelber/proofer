@@ -24,6 +24,19 @@ def test_sqlalchemy_information_insert_line(tested_sqlalchemy_information):
     tested_sqlalchemy_information.execute(rule)
 
 
+def test_sqlalchemy_information_double_insert_line(tested_sqlalchemy_information):
+    class DummyRule:
+        def execute(self, session):
+            session.add(Line(point1='A', point2='B'))
+            session.commit()
+
+    rule = DummyRule()
+    tested_sqlalchemy_information.execute(rule)
+    with pytest.raises(IntegrityError):
+        tested_sqlalchemy_information.execute(rule)
+
+
+
 def test_sqlalchemy_information_insert_angle(tested_sqlalchemy_information):
     class DummyRule:
         def execute(self, session):
@@ -33,6 +46,7 @@ def test_sqlalchemy_information_insert_angle(tested_sqlalchemy_information):
     rule = DummyRule()
     tested_sqlalchemy_information.execute(rule)
 
+
 def test_sqlalchemy_information_double_insert_angle(tested_sqlalchemy_information):
     class DummyRule:
         def execute(self, session):
@@ -40,6 +54,6 @@ def test_sqlalchemy_information_double_insert_angle(tested_sqlalchemy_informatio
             session.commit()
 
     rule = DummyRule()
+    tested_sqlalchemy_information.execute(rule)
     with pytest.raises(IntegrityError):
-        tested_sqlalchemy_information.execute(rule)
         tested_sqlalchemy_information.execute(rule)
