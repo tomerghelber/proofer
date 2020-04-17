@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 
 class Information(ABC):
     @abstractmethod
-    def find_all(self, query):
+    def execute(self, rule):
         pass
 
 
@@ -36,12 +36,10 @@ class Angle(Base):
 
 
 class SqlAlchemyInformation(Information):
-    def __init__(self):
-        self.__engine = create_engine('sqlite:///:memory:', echo=True)
+    def __init__(self, engine = create_engine('sqlite:///:memory:', echo=True)):
         Base.metadata.create_all(engine)
+        self.__Session = sessionmaker(bind=engine)
 
-    def find_all(self, query):
-        connection = self.__engine.connect()
-        select = query.select()
-        result = connection.execute(select)
-        return result.fetchall()
+    def execute(self, rule):
+        with self.__Session() as session:
+            rule.execute(session)
