@@ -52,7 +52,7 @@ def parse_line(line: str):
         if len(points) < 2:
             raise ValueError("The shape 'polygon' should have 3 points or more")
         return set(chain(
-            map(lambda points: Line(*points), combinations(points, 2)),
-            map(lambda points: Angle(*points), combinations(points, 3)),
+            [Line(points[i], points[(i + 1) % len(points)]) for i in range(len(points))],
+            [Angle(points[i], points[(i + 1) % len(points)], points[(i + 2) % len(points)]) for i in range(len(points))],
             points
         ))
