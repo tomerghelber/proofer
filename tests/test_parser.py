@@ -31,6 +31,17 @@ def test_parse_line_not_enough_points(number_of_points):
     with pytest.raises(ValueError):
         parse_line('line ' + ','.join(map(str, range(number_of_points))))
 
-        
-def test_parse_triangle():
-    pass
+
+@pytest.mark.parametrize("number_of_points", range(3, 12))
+def test_parse_polygon(number_of_points):
+    parsed = parse_line('polygon ' + ','.join(map(str, range(number_of_points))))
+
+    expected_number_of_objects = 0
+
+    assert expected_number_of_objects == len(paresd)
+
+
+@pytest.mark.parametrize("number_of_points", range(3))
+def test_parse_polygon_not_enough_points(number_of_points):
+    with pytest.raises(ValueError):
+        parse_line('polygon ' + ','.join(map(str, range(number_of_points))))
