@@ -3,7 +3,7 @@ from functools import reduce
 
 import pytest
 
-from proofer import parse_line, Point, Line
+from proofer.parser import parse_line, Point, Line
 
 
 def nCk(n: int, k: int) -> float:
