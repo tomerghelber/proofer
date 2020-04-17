@@ -19,7 +19,7 @@ class Line(Base):
     
     point1 = Column(String, primary_key=True, nullable=False)
     point2 = Column(String, primary_key=True, nullable=False)
-    size = Column(Float,  CheckConstraint('0 <= size AND size <= 360'), nullable=True, default=None)
+    size = Column(Float, CheckConstraint('0 <= size AND size <= 360'), nullable=True, default=None)
     
     CheckConstraint('point1 != point2')
 
@@ -30,7 +30,7 @@ class Angle(Base):
     point1 = Column(String, primary_key=True, nullable=False)
     angle_point = Column(String, primary_key=True, nullable=False)
     point2 = Column(String, primary_key=True, nullable=False)
-    size = Column(Float, nullable=True, default=None, CheckConstraint('0 =< size AND size <= 360'))
+    size = Column(Float, CheckConstraint('0 <= size AND size <= 360'), nullable=True, default=None)
     
     CheckConstraint('point1 != point2 AND point1 != angle_point AND point2 != angle_point')
 
