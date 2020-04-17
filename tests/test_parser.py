@@ -21,7 +21,7 @@ def test_parse_line_2_points():
     assert expected == paresd
 
 def test_parse_line():
-    for number_of_points in range(2, 12):
+    for number_of_points in range(3, 12):
         expected_number_of_lines = nCk(number_of_points, 2)
         expected_number_of_angles = nCk(number_of_points, 3)
         expected_number_of_objects = number_of_points + expected_number_of_lines + expected_number_of_angles
