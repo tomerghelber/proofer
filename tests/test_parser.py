@@ -36,7 +36,7 @@ def test_parse_line_not_enough_points(number_of_points):
 def test_parse_polygon(number_of_points):
     parsed = parse_line('polygon ' + ','.join(map(str, range(number_of_points))))
 
-    expected_number_of_objects = 0
+    expected_number_of_objects = 3 * len(number_of_points)
 
     assert expected_number_of_objects == len(parsed)
 
