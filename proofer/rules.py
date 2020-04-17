@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from itertools import chain
 import typing
 
-from sqlalchemy import and_
+from sqlalchemy import and_, select
 from sqlalchemy.orm import Query, aliased
 
 from proofer.informations import Angle, Line
@@ -36,8 +36,7 @@ def SumAngles():
     angle1 = aliased(Angle)
     angle2 = aliased(Angle)
     query = Angle.__table__.insert().from_select(
-        Query([angle1.point1, angle1.angle_point, angle2.point2, angle1.size + angle2.size])
-            .select_from(angle1)
-            .join(angle2, and_(angle1.angle_point == angle2.angle_point, angle1.point2 == angle2.point1))
+        select([angle1.point1, angle1.angle_point, angle2.point2, angle1.size + angle2.size])
+            .where(and_(angle1.angle_point == angle2.angle_point, angle1.point2 == angle2.point1))
     )
     return SimpleRule(query, "SimpleRule")
