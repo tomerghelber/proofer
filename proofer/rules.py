@@ -35,7 +35,7 @@ def SumAngles():
     """
     angle1 = aliased(Angle)
     angle2 = aliased(Angle)
-    query = Angle.insert().from_select(
+    query = Angle.__table__.insert().from_select(
         Query([angle1.point1, angle1.angle_point, angle2.point2, angle1.size + angle2.size])
             .select_from(angle1)
             .join(angle2, and_(angle1.angle_point == angle2.angle_point, angle1.point2 == angle2.point1))
