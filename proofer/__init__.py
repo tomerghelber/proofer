@@ -41,7 +41,7 @@ def parse_line(line: str):
             raise ValueError("The shape 'line' should have 2 points or more")
         return set(chain(
             map(lambda points: Line(*points), combinations(points, 2)),
-            map(lambda points: Angle(*points), combinations(points, 3)),
+            map(lambda points: Angle(*points, 180), combinations(points, 3)),
             points
         ))
     elif shape == 'polygon':
