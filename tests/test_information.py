@@ -34,7 +34,9 @@ def test_sqlalchemy_information_double_insert_angle(tested_sqlalchemy_informatio
     class DummyRule:
         def execute(self, session):
             session.add(Angle(point1='A', angle_point='B', point2='C'))
+            session.commit()
             session.add(Angle(point1='A', angle_point='B', point2='C'))
+            session.commit()
 
     rule = DummyRule()
     tested_sqlalchemy_information.execute(rule)
