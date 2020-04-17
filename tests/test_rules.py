@@ -24,8 +24,8 @@ def sqlalchemy_information(memory_engine):
 
 
 def test_SumAngles(sqlalchemy_information, memory_session):
-    angle1 = Angle(point1='A', angle_point='B', point2 = 'D', size=30)
-    angle2 = Angle(point2=angle1.point2, angle_point=angle1.angle_point, point2='C', size=60)
+    angle1 = Angle(point1='A', angle_point='B', point2='D', size=30)
+    angle2 = Angle(point1=angle1.point2, angle_point=angle1.angle_point, point2='C', size=60)
     
     memory_session.add_all([angle1, angle2])
     memory_session.commit()
