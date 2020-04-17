@@ -1,3 +1,5 @@
+from proofer import parse_line, Point, Line
+
 def test_parse_line_2_points(self):
     paresd = parse_line('line A,B')
 
