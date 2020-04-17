@@ -10,7 +10,7 @@ from informations import Angle, Line
           
 class Rule(ABC):
     @abstractmethod
-    def execute(self, information: Information):
+    def execute(self, session):
         pass
 
 
