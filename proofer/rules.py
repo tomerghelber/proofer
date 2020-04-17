@@ -37,7 +37,7 @@ def SumAngles():
     second_angle = aliased(Angle)
     query = Angle.insert().from_select(
         Query([first_angle.point1, first_angle.angle_point, second_angle.point2, angles1.size + angles2.size])
-            select_from(first_angle)
+            .select_from(first_angle)
             .join(second_angle, and_(first_angle.angle_point == second_angle.angle_point, first_angle.point2 == second_angle.point1))
     )
     return SimpleRule(query, "SimpleRule")
