@@ -4,7 +4,9 @@ from random import randint
 
 from proofer import parse_line, Point, Line
 
-def nCk(n, k):
+def nCk(n: int, k: int) -> float:
+    if n < k:
+        return 0.0
     k = min(k, n-k)
     numer = reduce(op.mul, range(n, n - k, -1), 1)
     denom = reduce(op.mul, range(1, k + 1), 1)
@@ -21,7 +23,7 @@ def test_parse_line_2_points():
     assert expected == paresd
 
 def test_parse_line():
-    for number_of_points in range(3, 12):
+    for number_of_points in range(2, 12):
         expected_number_of_lines = nCk(number_of_points, 2)
         expected_number_of_angles = nCk(number_of_points, 3)
         expected_number_of_objects = number_of_points + expected_number_of_lines + expected_number_of_angles
