@@ -16,7 +16,7 @@ def tested_sqlalchemy_information(memory_engine):
 def test_sqlalchemy_information_insert_line(tested_sqlalchemy_information):
     class DummyRule:
         def execute(self, session):
-            line = Line('A', 'B')
+            line = Line(point1='A', point2='B')
             session.add(line)
 
     rule = DummyRule()
