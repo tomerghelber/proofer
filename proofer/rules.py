@@ -23,7 +23,8 @@ class SimpleRule(Rule):
         self.__query.with_session(session)
 
     def __repr__(self):
-        return "{}({})".format(self.__name, str(self.__query)
+        return "{}({})".format(self.__name, str(self.__query))
+
 
 def SumAngles():
     """Sum angles.
@@ -38,6 +39,5 @@ def SumAngles():
         Query([first_angle.point1, first_angle.angle_point, second_angle.point2, angles1.size + angles2.size])
             select_from(first_angle)
             .join(second_angle, and_(first_angle.angle_point == second_angle.angle_point, first_angle.point2 == second_angle.point1))
-            .filter()
     )
     return SimpleRule(query, "SimpleRule")
