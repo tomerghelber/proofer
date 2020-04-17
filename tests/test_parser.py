@@ -1,7 +1,7 @@
 from proofer import parse_line, Point, Line
 
 
-def test_parse_line_2_points(self):
+def test_parse_line_2_points():
     paresd = parse_line('line A,B')
 
     point_a = Point("A")
@@ -11,5 +11,5 @@ def test_parse_line_2_points(self):
     assert expected == paresd
 
 
-def test_parse_triangle(self):
+def test_parse_triangle():
     pass
