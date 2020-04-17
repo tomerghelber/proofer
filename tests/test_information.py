@@ -21,3 +21,23 @@ def test_sqlalchemy_information_insert_line(tested_sqlalchemy_information):
 
     rule = DummyRule()
     tested_sqlalchemy_information.execute(rule)
+
+
+def test_sqlalchemy_information_insert_angle(tested_sqlalchemy_information):
+    class DummyRule:
+        def execute(self, session):
+            angle = Angle(point1='A', angle_point='B', point2='C')
+            session.add(angle)
+
+    rule = DummyRule()
+    tested_sqlalchemy_information.execute(rule)
+
+def test_sqlalchemy_information_double_insert_angle(tested_sqlalchemy_information):
+    class DummyRule:
+        def execute(self, session):
+            angle = Angle(point1='A', angle_point='B', point2='C')
+            session.add(angle)
+
+    rule = DummyRule()
+    tested_sqlalchemy_information.execute(rule)
+    tested_sqlalchemy_information.execute(rule)
