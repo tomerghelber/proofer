@@ -2,6 +2,8 @@ import operator as op
 from functools import reduce
 from random import randint
 
+import pytest
+
 from proofer import parse_line, Point, Line
 
 def nCk(n: int, k: int) -> float:
@@ -22,15 +24,23 @@ def test_parse_line_2_points():
 
     assert expected == paresd
 
-def test_parse_line():
-    for number_of_points in range(2, 12):
-        expected_number_of_lines = nCk(number_of_points, 2)
-        expected_number_of_angles = nCk(number_of_points, 3)
-        expected_number_of_objects = number_of_points + expected_number_of_lines + expected_number_of_angles
 
-        paresd = parse_line('line ' + ','.join(map(str, range(number_of_points))))
+@pytest.mark.parametrize("number_of_points", range(2, 12))
+def test_parse_line(number_of_points):
+    expected_number_of_lines = nCk(number_of_points, 2)
+    expected_number_of_angles = nCk(number_of_points, 3)
+    expected_number_of_objects = number_of_points + expected_number_of_lines + expected_number_of_angles
+
+    paresd = parse_line('line ' + ','.join(map(str, range(number_of_points))))
+
+    assert expected_number_of_objects == len(paresd)
+
+
+@pytest.mark.parametrize("number_of_points", range(2))
+def test_parse_line_not_enough_points(number_of_points):
+    with pytest.raises(ValueError):
+        parse_line('line ' + ','.join(map(str, range(number_of_points))))
+
         
-        assert expected_number_of_objects == len(paresd)
-
 def test_parse_triangle():
     pass
