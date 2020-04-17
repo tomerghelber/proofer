@@ -14,7 +14,6 @@ class Rule(ABC):
 class SimpleRule(Rule):
     def __init__(self, query: set, name: typing.Optional[str] = None):
         self.__query = query
-        self.__conclusion = conclusion
         self.__name = name
 
     def execute(self, information: Information):
