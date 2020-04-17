@@ -32,6 +32,7 @@ def is_same_line(l1: Line, l2: Line):
 def parse_points(points_string: str) -> typing.Sequence[Point]:
     return OrderedSet(map(Point, points_string.split(',')))
 
+
 def parse_line(line: str):
     shape, points_string = line.split()
     points = parse_points(points_string)
@@ -53,7 +54,8 @@ def main():
     line_ac = Line(point_a, point_c)
     hand = set([point_a, point_b, point_c, line_ab, line_bc, line_ac])
     paresd = parse_line('triangle A,B,C')
-    assert hand == paresd, str(hand - paresd) + ' ' +  str(paresd - hand)
+    assert hand == paresd
+
 
 if __name__ == "__main__":
     main()
