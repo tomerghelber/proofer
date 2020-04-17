@@ -37,11 +37,15 @@ def parse_line(line: str):
     shape, points_string = line.split()
     points = parse_points(points_string)
     if shape == 'line':
-        return set(chain(map(lambda points: Line(*points), combinations(points, 2)), map(lambda points: Angle(*points), combinations(points, 3)), points))
+        if len(points) < 2:
+            raise ValueError('The shape triangle should have exactly 3 points')
+        return set(chain(
+            map(lambda points: Line(*points), combinations(points, 2)),
+            map(lambda points: Angle(*points), combinations(points, 3)),
+            points
+        ))
     if shape == 'triangle':
-        if len(points) == 3:
-            pass
-        else:
+        if len(points) != 3:
             raise ValueError('The shape triangle should have exactly 3 points')
 
 
