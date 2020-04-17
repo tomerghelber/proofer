@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine
+import pytest
 
 from proofer.informations import SqlAlchemyInformation, Line, Angle
 
