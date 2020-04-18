@@ -15,7 +15,7 @@ class Rule(ABC):
 
 
 class SimpleRule(Rule):
-    def __init__(self, query: set, name: typing.Optional[str] = None):
+    def __init__(self, query, name: typing.Optional[str] = None):
         self.__query = query
         self.__name = "SimpleRule" if name is None else name
 
@@ -36,7 +36,8 @@ def SumAngles():
     angle1 = aliased(Angle)
     angle2 = aliased(Angle)
     query = Angle.__table__.insert().from_select(
-        select([angle1.point1, angle1.angle_point, angle2.point2, angle1.size + angle2.size])
+        ["point1", "angle_point", "point2", "size"],
+        select([angle1.point1.label("point1"), angle1.angle_point.label("angle_point"), angle2.point2.label("point2"), (angle1.size + angle2.size).label("size")])
             .where(and_(angle1.angle_point == angle2.angle_point, angle1.point2 == angle2.point1))
     )
-    return SimpleRule(query, "SimpleRule")
+    return SimpleRule(query, "SumAngles")
