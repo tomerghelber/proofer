@@ -53,5 +53,4 @@ def SumLines():
         select([line1.point1.label("point1"), line2.point2.label("point2"), (line1.size + line2.size).label("size")])
             .where(and_(angle.size == 180, angle.point1 == line1.point1, angle.angle_point == line1.point2, angle.angle_point == line2.point1, angle.point2 == line2.point2))
     )
-    return SimpleRule(query, "SumAngles")
     return SimpleRule(query, "SumLines")
