@@ -43,3 +43,15 @@ def SumAngles():
             .where(and_(angle1.angle_point == angle2.angle_point, angle1.point2 == angle2.point1))
     )
     return SimpleRule(query, "SumAngles")
+
+def SumLines():
+    line1 = aliased(Line)
+    line2 = aliased(Line)
+    angle = aliased(Angle)
+    query = Line.__table__.insert().from_select(
+        ["point1", "point2", "size"],
+        select([line1.point1.label("point1"), line2.point2.label("point2"), (line1.size + line2.size).label("size")])
+            .where(and_(angle.size == 180, angle.point1 == line1.point1, angle.angle_point == line1.point2, angle.angle_point == line2.point1, angle.point2 == line2.point2))
+    )
+    return SimpleRule(query, "SumAngles")
+    return SimpleRule(query, "SumLines")
