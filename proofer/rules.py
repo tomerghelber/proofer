@@ -20,7 +20,9 @@ class SimpleRule(Rule):
         self.__name = "SimpleRule" if name is None else name
 
     def execute(self, session):
+        print(self.__query)
         session.connection().execute(self.__query)
+        session.commit()
 
     def __repr__(self):
         return "{}({})".format(self.__name, str(self.__query))
@@ -40,5 +42,4 @@ def SumAngles():
         select([angle1.point1.label("point1"), angle1.angle_point.label("angle_point"), angle2.point2.label("point2"), (angle1.size + angle2.size).label("size")])
             .where(and_(angle1.angle_point == angle2.angle_point, angle1.point2 == angle2.point1))
     )
-    print(query)
     return SimpleRule(query, "SumAngles")
