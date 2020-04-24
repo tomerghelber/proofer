@@ -41,6 +41,7 @@ jobs:
     - name: Update documention
       run: |
         cd docsource
+        pip install sphinx
         make github
         cd ..
         git add 'docs/*'
