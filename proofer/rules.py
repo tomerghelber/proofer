@@ -71,3 +71,13 @@ def SumVectors():
                         ))
     )
     return SimpleRule(query, "SumLines")
+
+
+def ReverseVector():
+    vector = aliased(Vector)
+    query = Vector.__table__.insert().from_select(
+        ["start_point", "end_point", "length"],
+        select([vector.end_point.label('start_point'), vector.start_point.label('end_point'),
+                vector.length.label("length")])
+    )
+    return SimpleRule(query, "ReverseAngle")

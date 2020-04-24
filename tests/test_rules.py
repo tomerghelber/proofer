@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from proofer.informations import SqlAlchemyInformation, Vector, Angle
-from proofer.rules import SumAngles, SumVectors, ReverseAngle
+from proofer.rules import SumAngles, SumVectors, ReverseAngle, ReverseVector
 
 import pytest
 
@@ -84,7 +84,7 @@ def test_ReverseAngle(sqlalchemy_information, memory_session):
     assert result.size == 360 - angle.size
 
 
-def test_ReverseAngle(sqlalchemy_information, memory_session):
+def test_ReverseAngle_on_null_empty_size_not_adding(sqlalchemy_information, memory_session):
     angle = Angle(start_point1='A', end_point1='B', start_point2='C', end_point2='D')
 
     memory_session.add(angle)
@@ -95,6 +95,36 @@ def test_ReverseAngle(sqlalchemy_information, memory_session):
     sqlalchemy_information.execute(tested_rule)
 
     assert len(memory_session.query(Angle).all()) == 1
+
+
+def test_ReverseVector(sqlalchemy_information, memory_session):
+    vector = Vector(start_point='A', end_point='B', length=1)
+
+    memory_session.add(vector)
+    memory_session.commit()
+
+    tested_rule = ReverseVector()
+
+    sqlalchemy_information.execute(tested_rule)
+
+    assert len(memory_session.query(Vector).all()) == 2
+    result = memory_session.query(Vector).get([vector.end_point, vector.start_point])
+    assert result.length == vector.length
+
+
+def test_ReverseVector_on_null_adds_reverse(sqlalchemy_information, memory_session):
+    vector = Vector(start_point='A', end_point='B')
+
+    memory_session.add(vector)
+    memory_session.commit()
+
+    tested_rule = ReverseVector()
+
+    sqlalchemy_information.execute(tested_rule)
+
+    assert len(memory_session.query(Vector).all()) == 2
+    result = memory_session.query(Vector).get([vector.end_point, vector.start_point])
+    assert result.length == vector.length
 
 
 def test_SumVectors(sqlalchemy_information, memory_session):
