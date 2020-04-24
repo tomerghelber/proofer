@@ -40,7 +40,9 @@ jobs:
         python -m pytest
     - name: Update documention
       run: |
+        cd docsource
         make github
+        cd ..
         git add 'docs/*'
         git commit -m "Update documention from GitHub Action"
         git push
