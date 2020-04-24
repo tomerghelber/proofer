@@ -26,31 +26,34 @@ def sqlalchemy_information(memory_engine):
 
 
 def test_SumAngles(sqlalchemy_information, memory_session):
-    angle1 = Angle(point1='A', angle_point='B', point2='D', size=30)
-    angle2 = Angle(point1=angle1.point2, angle_point=angle1.angle_point, point2='C', size=60)
-    
+    angle1 = Angle(start_point1='A', end_point1='B', start_point2='C', end_point2='D', size=30)
+    angle2 = Angle(start_point1=angle1.start_point2, end_point1=angle1.end_point2, start_point2='E', end_point2='F', size=60)
+
     memory_session.add_all([angle1, angle2])
     memory_session.commit()
-    
+
     tested_rule = SumAngles()
-    
+
     sqlalchemy_information.execute(tested_rule)
-    
-    result = memory_session.query(Angle).get([angle1.point1, angle1.angle_point, angle2.point2])
+
+    assert len(memory_session.query(Angle).all()) == 3
+    result = memory_session.query(Angle).get([angle1.start_point1, angle1.end_point1, angle2.start_point2, angle2.end_point2])
     assert result.size == angle1.size + angle2.size
 
 
 def test_SumVectors(sqlalchemy_information, memory_session):
-    angle = Angle(point1='A', angle_point='B', point2='C', size=180)
-    vector1 = Vector(start_point=angle.point1, end_point=angle.angle_point, length=2)
-    vector2 = Vector(start_point=angle.angle_point, end_point=angle.point2, length=3)
-    
+    vector1 = Vector(start_point='A', end_point='B', length=2)
+    vector2 = Vector(start_point=vector1.end_point, end_point='C', length=3)
+    angle = Angle(start_point1=vector1.start_point, end_point1=vector1.end_point, start_point2=vector2.start_point, end_point2=vector2.end_point, size=180)
+
     memory_session.add_all([angle, vector1, vector2])
     memory_session.commit()
-    
+
     tested_rule = SumVectors()
 
     sqlalchemy_information.execute(tested_rule)
-    
+
+    assert len(memory_session.query(Angle).all()) == 1
+    assert len(memory_session.query(Vector).all()) == 3
     result = memory_session.query(Vector).get([vector1.start_point, vector2.end_point])
     assert result.length == vector1.length + vector2.length
