@@ -38,12 +38,19 @@ jobs:
       run: |
         pip install pytest
         python -m pytest
-    - name: Update documention
+    - name: Auto-generated documention
       run: |
         cd docsource
         pip install sphinx
         make github
         cd ..
-#        git add 'docs/*'
-#        git commit -m "Update documention from GitHub Action"
-#        git push
+    - name: Commit and push documentation updates
+      uses: github-actions-x/commit@v2.5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        push-branch: master
+        files: docs/
+        commit-message: 'Adds auto-generated documentation'
+        rebase: 'true' # pull abd rebase before commit
+        name: GitHub Action
+        email: action@github.com
