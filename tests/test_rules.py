@@ -55,7 +55,7 @@ def test_SumAngles_on_first_empty_adds_nothing(sqlalchemy_information, memory_se
     assert len(memory_session.query(Angle).all()) == 2
 
 
-def test_SumAngles_on_secxond_empty_adds_nothing(sqlalchemy_information, memory_session):
+def test_SumAngles_on_second_empty_adds_nothing(sqlalchemy_information, memory_session):
     angle1 = Angle(start_point1='A', end_point1='B', start_point2='C', end_point2='D', size=30)
     angle2 = Angle(start_point1=angle1.start_point2, end_point1=angle1.end_point2, start_point2='E', end_point2='F')
 
@@ -85,3 +85,35 @@ def test_SumVectors(sqlalchemy_information, memory_session):
     assert len(memory_session.query(Vector).all()) == 3
     result = memory_session.query(Vector).get([vector1.start_point, vector2.end_point])
     assert result.length == vector1.length + vector2.length
+
+
+def test_SumVectors_on_first_empty_adds_nothing(sqlalchemy_information, memory_session):
+    vector1 = Vector(start_point='A', end_point='B')
+    vector2 = Vector(start_point=vector1.end_point, end_point='C', length=3)
+    angle = Angle(start_point1=vector1.start_point, end_point1=vector1.end_point, start_point2=vector2.start_point, end_point2=vector2.end_point, size=180)
+
+    memory_session.add_all([angle, vector1, vector2])
+    memory_session.commit()
+
+    tested_rule = SumVectors()
+
+    sqlalchemy_information.execute(tested_rule)
+
+    assert len(memory_session.query(Angle).all()) == 1
+    assert len(memory_session.query(Vector).all()) == 2
+
+
+def test_SumVectors_on_second_empty_adds_nothing(sqlalchemy_information, memory_session):
+    vector1 = Vector(start_point='A', end_point='B', length=2)
+    vector2 = Vector(start_point=vector1.end_point, end_point='C')
+    angle = Angle(start_point1=vector1.start_point, end_point1=vector1.end_point, start_point2=vector2.start_point, end_point2=vector2.end_point, size=180)
+
+    memory_session.add_all([angle, vector1, vector2])
+    memory_session.commit()
+
+    tested_rule = SumVectors()
+
+    sqlalchemy_information.execute(tested_rule)
+
+    assert len(memory_session.query(Angle).all()) == 1
+    assert len(memory_session.query(Vector).all()) == 2

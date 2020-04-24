@@ -53,6 +53,8 @@ def SumVectors():
         select([angle.start_point1.label("start_point"), angle.end_point2.label("end_point"), (vector1.length + vector2.length).label("length")])
             .where(and_(angle.size == 180, angle.end_point1 == angle.start_point2,
                         angle.start_point1 == vector1.start_point, angle.end_point1 == vector1.end_point,
-                        angle.start_point2 == vector2.start_point, angle.end_point2 == vector2.end_point))
+                        angle.start_point2 == vector2.start_point, angle.end_point2 == vector2.end_point,
+                        None != vector1.length, None != vector2.length
+                        ))
     )
     return SimpleRule(query, "SumLines")
