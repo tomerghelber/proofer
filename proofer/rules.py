@@ -40,7 +40,7 @@ class SimpleRule(Rule):
         session.commit()
 
     def __repr__(self):
-        return "{}({})".format(self.__name, str(self.__query))
+        return f"${self.__name}(${self.__query})"
 
 
 def SumAngles():

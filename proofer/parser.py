@@ -40,7 +40,7 @@ def parse_points(points_string: str) -> typing.Sequence[str]:
     parsed = points_string.split(',')
     result = OrderedSet(parsed)
     if len(parsed) != len(result):
-        raise ValueError("The same point is used in the element: " + str(parsed))
+        raise ValueError(f"The same point is used in the element: ${parsed}")
     return result
 
 
