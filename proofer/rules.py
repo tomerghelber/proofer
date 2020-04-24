@@ -8,12 +8,28 @@ from proofer.informations import Angle, Vector
 
 
 class Rule(ABC):
+    """Base interface to create executable rules for proofer."""
     @abstractmethod
     def execute(self, session):
+        """The main function to execute logic.
+
+        Args:
+            session: This entry hasn't been decided yet.
+
+
+        """
+        # TODO: decide on session type.
         pass
 
 
 class SimpleRule(Rule):
+    """Simple rule class for insert-from-select queries.
+
+    Args:
+        query: An SqlAlchemy query.
+        name: The rule can be given a name for easier debugging.
+
+    """
     def __init__(self, query, name: typing.Optional[str] = None):
         self.__query = query
         self.__name = "SimpleRule" if name is None else name
