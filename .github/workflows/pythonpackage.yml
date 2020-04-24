@@ -44,6 +44,6 @@ jobs:
         pip install sphinx
         make github
         cd ..
-        git add 'docs/*'
-        git commit -m "Update documention from GitHub Action"
-        git push
+#        git add 'docs/*'
+#        git commit -m "Update documention from GitHub Action"
+#        git push
