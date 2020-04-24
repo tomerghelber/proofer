@@ -1,1 +1,4 @@
+Parser
+******
+
 .. automodule:: proofer.parser
