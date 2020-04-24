@@ -44,6 +44,19 @@ def SumAngles():
     return SimpleRule(query, "SumAngles")
 
 
+def ReverseAngle():
+    angle = aliased(Angle)
+    query = Angle.__table__.insert().from_select(
+        ["start_point1", "end_point1", "start_point2", "end_point2", "size"],
+        select([angle.start_point2.label('start_point1'), angle.end_point2.label('end_point1'),
+                angle.start_point1.label('start_point2'), angle.end_point1.label('end_point2'),
+                (360 - angle.size).label("size")])
+            .where(angle.size != None)
+
+    )
+    return SimpleRule(query, "ReverseAngle")
+
+
 def SumVectors():
     vector1 = aliased(Vector)
     vector2 = aliased(Vector)

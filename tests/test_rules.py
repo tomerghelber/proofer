@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from proofer.informations import SqlAlchemyInformation, Vector, Angle
-from proofer.rules import SumAngles, SumVectors
+from proofer.rules import SumAngles, SumVectors, ReverseAngle
 
 import pytest
 
@@ -67,6 +67,34 @@ def test_SumAngles_on_second_empty_adds_nothing(sqlalchemy_information, memory_s
     sqlalchemy_information.execute(tested_rule)
 
     assert len(memory_session.query(Angle).all()) == 2
+
+
+def test_ReverseAngle(sqlalchemy_information, memory_session):
+    angle = Angle(start_point1='A', end_point1='B', start_point2='C', end_point2='D', size=30)
+
+    memory_session.add(angle)
+    memory_session.commit()
+
+    tested_rule = ReverseAngle()
+
+    sqlalchemy_information.execute(tested_rule)
+
+    assert len(memory_session.query(Angle).all()) == 2
+    result = memory_session.query(Angle).get([angle.start_point2, angle.end_point2, angle.start_point1, angle.end_point1])
+    assert result.size == 360 - angle.size
+
+
+def test_ReverseAngle(sqlalchemy_information, memory_session):
+    angle = Angle(start_point1='A', end_point1='B', start_point2='C', end_point2='D')
+
+    memory_session.add(angle)
+    memory_session.commit()
+
+    tested_rule = ReverseAngle()
+
+    sqlalchemy_information.execute(tested_rule)
+
+    assert len(memory_session.query(Angle).all()) == 1
 
 
 def test_SumVectors(sqlalchemy_information, memory_session):
