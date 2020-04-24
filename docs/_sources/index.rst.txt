@@ -10,7 +10,8 @@ Welcome to GeoProofer's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   parser
+   rules
 
 Indices and tables
 ==================
