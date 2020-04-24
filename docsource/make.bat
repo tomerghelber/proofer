@@ -31,7 +31,7 @@ goto end
 
 :github
 %SPHINXBUILD% -M html %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
-Xcopy /E /I %BUILDDIR%\html ..\docs
+Xcopy /E /I /Y %BUILDDIR%\html ..\docs
 goto end
 
 :help
