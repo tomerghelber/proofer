@@ -15,7 +15,7 @@ help:
 .PHONY: help Makefile
 
 github:
-	@$(SPHINXBUILD) -M html -n --keep-going "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@make html -n --keep-going -j auto
 	@cp -a "$(BUILDDIR)"/html/. ../docs
 
 # Catch-all target: route all unknown targets to Sphinx using the new
