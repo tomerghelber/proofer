@@ -5,7 +5,7 @@ import typing
 from sqlalchemy import and_, select
 from sqlalchemy.orm import Query, aliased
 
-from proofer.informations import Angle, Line
+from proofer.informations import Angle, Vector
 
           
 class Rule(ABC):
@@ -44,13 +44,14 @@ def SumAngles():
     )
     return SimpleRule(query, "SumAngles")
 
-def SumLines():
-    line1 = aliased(Line)
-    line2 = aliased(Line)
+
+def SumVectors():
+    vector1 = aliased(Vector)
+    vector2 = aliased(Vector)
     angle = aliased(Angle)
-    query = Line.__table__.insert().from_select(
-        ["point1", "point2", "size"],
-        select([line1.point1.label("point1"), line2.point2.label("point2"), (line1.size + line2.size).label("size")])
-            .where(and_(angle.size == 180, angle.point1 == line1.point1, angle.angle_point == line1.point2, angle.angle_point == line2.point1, angle.point2 == line2.point2))
+    query = Vector.__table__.insert().from_select(
+        ["start_point", "end_point", "length"],
+        select([vector1.start_point.label("start_point"), vector2.end_point.label("end_point"), (vector1.length + vector2.length).label("length")])
+            .where(and_(angle.size == 180, angle.point1 == vector1.start_point, angle.angle_point == vector1.end_point, angle.angle_point == vector2.start_point, angle.point2 == vector2.end_point))
     )
     return SimpleRule(query, "SumLines")

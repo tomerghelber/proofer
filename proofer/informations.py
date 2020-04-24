@@ -15,14 +15,14 @@ class Information(ABC):
 Base = declarative_base()
 
 
-class Line(Base):
-    __tablename__ = "lines"
+class Vector(Base):
+    __tablename__ = "vectors"
     
-    point1 = Column(String, primary_key=True, nullable=False)
-    point2 = Column(String, primary_key=True, nullable=False)
-    size = Column(Float, CheckConstraint('0 <= size'), nullable=True, default=None)
+    start_point = Column(String, primary_key=True, nullable=False)
+    end_point = Column(String, primary_key=True, nullable=False)
+    length = Column(Float, CheckConstraint('0 <= length'), nullable=True, default=None)
     
-    CheckConstraint('point1 != point2')
+    CheckConstraint('start_point != end_point')
 
 
 class Angle(Base):

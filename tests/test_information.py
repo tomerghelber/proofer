@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 import pytest
 
-from proofer.informations import SqlAlchemyInformation, Line, Angle
+from proofer.informations import SqlAlchemyInformation, Vector, Angle
 
 @pytest.fixture
 def memory_engine():
@@ -17,7 +17,7 @@ def tested_sqlalchemy_information(memory_engine):
 def test_sqlalchemy_information_insert_line(tested_sqlalchemy_information):
     class DummyRule:
         def execute(self, session):
-            session.add(Line(point1='A', point2='B'))
+            session.add(Vector(start_point='A', end_point='B'))
             session.commit()
 
     rule = DummyRule()
@@ -27,7 +27,7 @@ def test_sqlalchemy_information_insert_line(tested_sqlalchemy_information):
 def test_sqlalchemy_information_insert_line_point1_expected(tested_sqlalchemy_information):
     class DummyRule:
         def execute(self, session):
-            session.add(Line(point2='B'))
+            session.add(Vector(end_point='B'))
             session.commit()
 
     rule = DummyRule()
@@ -38,7 +38,7 @@ def test_sqlalchemy_information_insert_line_point1_expected(tested_sqlalchemy_in
 def test_sqlalchemy_information_insert_line_point2_expected(tested_sqlalchemy_information):
     class DummyRule:
         def execute(self, session):
-            session.add(Line(point2='B'))
+            session.add(Vector(end_point='B'))
             session.commit()
 
     rule = DummyRule()
@@ -60,7 +60,7 @@ def test_sqlalchemy_information_insert_angle_size_negative(tested_sqlalchemy_inf
 def test_sqlalchemy_information_double_insert_line_fails(tested_sqlalchemy_information):
     class DummyRule:
         def execute(self, session):
-            session.add(Line(point1='A', point2='B'))
+            session.add(Vector(start_point='A', end_point='B'))
             session.commit()
 
     rule = DummyRule()
