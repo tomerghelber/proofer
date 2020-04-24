@@ -41,6 +41,34 @@ def test_SumAngles(sqlalchemy_information, memory_session):
     assert result.size == angle1.size + angle2.size
 
 
+def test_SumAngles_on_first_empty_adds_nothing(sqlalchemy_information, memory_session):
+    angle1 = Angle(start_point1='A', end_point1='B', start_point2='C', end_point2='D')
+    angle2 = Angle(start_point1=angle1.start_point2, end_point1=angle1.end_point2, start_point2='E', end_point2='F', size=60)
+
+    memory_session.add_all([angle1, angle2])
+    memory_session.commit()
+
+    tested_rule = SumAngles()
+
+    sqlalchemy_information.execute(tested_rule)
+
+    assert len(memory_session.query(Angle).all()) == 2
+
+
+def test_SumAngles_on_secxond_empty_adds_nothing(sqlalchemy_information, memory_session):
+    angle1 = Angle(start_point1='A', end_point1='B', start_point2='C', end_point2='D', size=30)
+    angle2 = Angle(start_point1=angle1.start_point2, end_point1=angle1.end_point2, start_point2='E', end_point2='F')
+
+    memory_session.add_all([angle1, angle2])
+    memory_session.commit()
+
+    tested_rule = SumAngles()
+
+    sqlalchemy_information.execute(tested_rule)
+
+    assert len(memory_session.query(Angle).all()) == 2
+
+
 def test_SumVectors(sqlalchemy_information, memory_session):
     vector1 = Vector(start_point='A', end_point='B', length=2)
     vector2 = Vector(start_point=vector1.end_point, end_point='C', length=3)

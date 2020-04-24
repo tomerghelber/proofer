@@ -37,7 +37,8 @@ def SumAngles():
         select([angle1.start_point1.label('start_point1'), angle1.end_point1.label('end_point1'),
                   angle2.start_point2.label('start_point2'), angle2.end_point2.label('end_point2'),
                   (angle1.size + angle2.size).label('size')])
-            .where(and_(angle1.start_point2 == angle2.start_point1, angle1.end_point2 == angle2.end_point1))
+            .where(and_(angle1.start_point2 == angle2.start_point1, angle1.end_point2 == angle2.end_point1,
+                        angle1.size != None, angle2.size != None))
 
     )
     return SimpleRule(query, "SumAngles")
