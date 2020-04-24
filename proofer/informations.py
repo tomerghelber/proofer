@@ -32,7 +32,7 @@ class Angle(Base):
     end_point1 = Column(String, ForeignKey(Vector.end_point), primary_key=True, nullable=False)
     start_point2 = Column(String, ForeignKey(Vector.start_point), primary_key=True, nullable=False)
     end_point2 = Column(String, ForeignKey(Vector.end_point), primary_key=True, nullable=False)
-    size = Column(Float, CheckConstraint('0 <= size AND size <= 360'), nullable=True, default=None)
+    size = Column(Float, CheckConstraint('0 <= size AND size < 360'), nullable=True, default=None)
 
     # vector1 = relationship(Vector, foreign_keys=[start_point1, end_point1])
     # vector2 = relationship(Vector, foreign_keys=[start_point2, end_point2])

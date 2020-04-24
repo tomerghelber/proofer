@@ -136,7 +136,7 @@ def test_sqlalchemy_information_insert_angle_size_negative(tested_sqlalchemy_inf
 def test_sqlalchemy_information_insert_angle_size_too_big(tested_sqlalchemy_information):
     class DummyRule:
         def execute(self, session):
-            session.add(Angle(start_point1='A', end_point1='B', start_point2='B', end_point2='C', size=-361))
+            session.add(Angle(start_point1='A', end_point1='B', start_point2='B', end_point2='C', size=-360))
             session.commit()
 
     rule = DummyRule()
