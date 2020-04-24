@@ -52,5 +52,6 @@ jobs:
         files: docs/
         commit-message: 'Adds auto-generated documentation'
         rebase: 'true' # pull abd rebase before commit
+        force-add: 'true'
         name: GitHub Action
         email: action@github.com
