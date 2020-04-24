@@ -1,3 +1,6 @@
+"""This module holds all the functionality to parse a text into a useful information for the proofer.
+
+"""
 from dataclasses import dataclass
 from itertools import combinations, chain
 import typing
@@ -5,23 +8,18 @@ import typing
 from ordered_set import OrderedSet
 
 
-@dataclass(order=True, frozen=True)
-class Point:
-    name: str
-
-
 @dataclass(unsafe_hash=True)
 class Line:
-    point1: Point
-    point2: Point
+    point1: str
+    point2: str
     size: typing.Optional[float] = None
 
 
 @dataclass(unsafe_hash=True)
 class Angle:
-    point1: Point
-    angle_point: Point
-    point2: Point
+    point1: str
+    angle_point: str
+    point2: str
     size: typing.Optional[float] = None
 
 
@@ -29,15 +27,24 @@ def is_same_line(l1: Line, l2: Line):
     return (l1.point1 == l2.point1 and l1.point2 == l2.point2) or (l1.point1 == l2.point2 and l1.point2 == l2.point1)
 
 
-def parse_points(points_string: str) -> typing.Sequence[Point]:
-    parsed = list(map(Point, points_string.split(',')))
+def parse_points(points_string: str) -> typing.Sequence[str]:
+    """Parsing points that were arguments for a shape
+
+    Args:
+        points_string: A string of points to parse.
+
+    Returns:
+        Sequence of point by their parsed order.
+
+    """
+    parsed = points_string.split(',')
     result = OrderedSet(parsed)
     if len(parsed) != len(result):
         raise ValueError("The same point is used in the element: " + str(parsed))
     return result
 
 
-def parse_line(line: str):
+def parse_line(line: str) -> typing.Set:
     shape, points_string = line.split()
     points = parse_points(points_string)
     if shape == 'line':
