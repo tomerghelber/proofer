@@ -30,7 +30,7 @@ if errorlevel 9009 (
 goto end
 
 :github
-make html -n --keep-going -j auto
+%SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% -n --keep-going -j auto %O%
 Xcopy /E /I /Y %BUILDDIR%\html ..\docs
 goto end
 
