@@ -22,21 +22,17 @@ class MYTransformer(Transformer):
         if shape == 'line':
             if len(points) < 2:
                 raise ValueError("The shape 'line' should have 2 points or more")
-            res = frozenset(chain(
-                map(lambda points: Vector(start_point=points[0], end_point=points[1]), combinations(points, 2)),
-                map(lambda points: Angle(start_point1=points[0], end_point1=points[1],
-                                         start_point2=points[1], end_point2=points[2], size=180), combinations(points, 3)),
-            ))
+            vectors = [Vector(start_point=point1, end_point=point2) for point1, point2 in combinations(points, 2)]
+            angles = [Angle(vector1=vec1, vector2=vec2, size=180) for vec1, vec2 in combinations(vectors, 2)]
+            res = frozenset(chain(vectors, angles))
             return res
         elif shape == 'polygon':
             if len(points) < 3:
                 raise ValueError("The shape 'polygon' should have 3 points or more")
-            res = frozenset(chain(
-                [Vector(start_point=points[i], end_point=points[(i + 1) % len(points)]) for i in range(len(points))],
-                [Angle(start_point1=points[i], end_point1=points[(i + 1) % len(points)],
-                       start_point2=points[(i + 1) % len(points)], end_point2=points[(i + 2) % len(points)])
-                 for i in range(len(points))],
-            ))
+            vectors = [Vector(start_point=points[i], end_point=points[(i + 1) % len(points)])
+                       for i in range(len(points))]
+            angles = [Angle(vector1=vectors[i], vector2=vectors[(i + 1) % len(vectors)]) for i in range(len(vectors))]
+            res = frozenset(chain(vectors, angles))
             return res
         raise ValueError(f"Unknown shape: '{shape}'")
 
