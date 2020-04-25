@@ -20,77 +20,49 @@ class Rule(ABC):
         pass
 
 
-class SimpleRule(Rule):
-    """Simple rule class for insert-from-select queries.
-
-    Args:
-        query: An SqlAlchemy query.
-        name: The rule can be given a name for easier debugging.
-
-    """
-    def __init__(self, query, name: typing.Optional[str] = None):
-        self.__query = query
-        self.__name = "SimpleRule" if name is None else name
-
+class SumAngles(Rule):
     def execute(self, session: Session):
-        session.connection().execute(self.__query)
+        angle1 = aliased(Angle, name="angle1")
+        angle2 = aliased(Angle, name="angle2")
+        angles = session.query(angle1.vector_id1, angle2.vector_id2, angle1.size + angle2.size).filter(
+            and_(angle1.vector_id2 == angle2.vector_id1, angle1.size != None, angle2.size != None)).all()
+
+        mapper = lambda ang: Angle(vector_id1=ang[0], vector_id2=ang[1], size=ang[2])
+        new_angles = list(map(mapper, angles))
+        session.add_all(new_angles)
         session.commit()
 
-    def __repr__(self):
-        return f"{self.__name}({self.__query})"
+
+class ReverseAngle(Rule):
+    def execute(self, session: Session):
+        angle = aliased(Angle, name="angle1")
+        angles = session.query(angle.vector_id2, angle.vector_id1, 360 - angle.size).filter(angle.size != None).all()
+        mapper = lambda ang: Angle(vector_id1=ang[0], vector_id2=ang[1], size=ang[2])
+        new_angles = list(map(mapper, angles))
+        session.add_all(new_angles)
+        session.commit()
 
 
-def SumAngles():
-    """Sum angles.
-    """
-    angle1 = aliased(Angle)
-    angle2 = aliased(Angle)
-    query = Angle.__table__.insert().from_select(
-        ["start_point1", "end_point1", "start_point2", "end_point2", "size"],
-        select([angle1.start_point1.label('start_point1'), angle1.end_point1.label('end_point1'),
-                  angle2.start_point2.label('start_point2'), angle2.end_point2.label('end_point2'),
-                  (angle1.size + angle2.size).label('size')])
-            .where(and_(angle1.start_point2 == angle2.start_point1, angle1.end_point2 == angle2.end_point1,
-                        angle1.size != None, angle2.size != None))
-
-    )
-    return SimpleRule(query, "SumAngles")
-
-
-def ReverseAngle():
-    angle = aliased(Angle)
-    query = Angle.__table__.insert().from_select(
-        ["start_point1", "end_point1", "start_point2", "end_point2", "size"],
-        select([angle.start_point2.label('start_point1'), angle.end_point2.label('end_point1'),
-                angle.start_point1.label('start_point2'), angle.end_point1.label('end_point2'),
-                (360 - angle.size).label("size")])
-            .where(angle.size != None)
-
-    )
-    return SimpleRule(query, "ReverseAngle")
+class SumVectors(Rule):
+    def execute(self, session: Session):
+        vector1 = aliased(Vector, name="vector1")
+        vector2 = aliased(Vector, name="vector2")
+        angle = aliased(Angle)
+        vectors = session.query(vector1.start_point, vector2.end_point, vector1.length + vector2.length)\
+        .filter(and_(angle.size == 180, vector1.end_point == vector2.start_point,
+                     angle.vector_id1 == vector1.id, angle.vector_id2 == vector2.id,
+                     None != vector1.length, None != vector2.length
+                     )).all()
+        mapper = lambda vec: Vector(start_point=vec[0], end_point=vec[1], length=vec[2])
+        new_vectors = list(map(mapper, vectors))
+        session.add_all(new_vectors)
+        session.commit()
 
 
-def SumVectors():
-    vector1 = aliased(Vector)
-    vector2 = aliased(Vector)
-    angle = aliased(Angle)
-    query = Vector.__table__.insert().from_select(
-        ["start_point", "end_point", "length"],
-        select([angle.start_point1.label("start_point"), angle.end_point2.label("end_point"), (vector1.length + vector2.length).label("length")])
-            .where(and_(angle.size == 180, angle.end_point1 == angle.start_point2,
-                        angle.start_point1 == vector1.start_point, angle.end_point1 == vector1.end_point,
-                        angle.start_point2 == vector2.start_point, angle.end_point2 == vector2.end_point,
-                        None != vector1.length, None != vector2.length
-                        ))
-    )
-    return SimpleRule(query, "SumLines")
-
-
-def ReverseVector():
-    vector = aliased(Vector)
-    query = Vector.__table__.insert().from_select(
-        ["start_point", "end_point", "length"],
-        select([vector.end_point.label('start_point'), vector.start_point.label('end_point'),
-                vector.length.label("length")])
-    )
-    return SimpleRule(query, "ReverseAngle")
+class ReverseVector(Rule):
+    def execute(self, session: Session):
+        vectors = session.query(Vector).all()
+        mapper = lambda vec: Vector(start_point=vec.end_point, end_point=vec.start_point, length=vec.length)
+        new_vectors = list(map(mapper, vectors))
+        session.add_all(new_vectors)
+        session.commit()
