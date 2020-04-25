@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import typing
 
 from sqlalchemy import and_, select
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, Session
 
 from proofer.informations import Angle, Vector
 
@@ -10,15 +10,13 @@ from proofer.informations import Angle, Vector
 class Rule(ABC):
     """Base interface to create executable rules for proofer."""
     @abstractmethod
-    def execute(self, session):
+    def execute(self, session: Session):
         """The main function to execute logic.
 
         Args:
-            session: This entry hasn't been decided yet.
-
+            session: An SqlAlchemy session.
 
         """
-        # TODO: decide on session type.
         pass
 
 
@@ -34,8 +32,7 @@ class SimpleRule(Rule):
         self.__query = query
         self.__name = "SimpleRule" if name is None else name
 
-    def execute(self, session):
-        print(self.__query)
+    def execute(self, session: Session):
         session.connection().execute(self.__query)
         session.commit()
 
