@@ -1,15 +1,14 @@
 # proofer
 Automatic math proofer
+![Python package](https://github.com/tomerghelber/proofer/workflows/Python%20package/badge.svg)
 
-Defenirion
+Defenition
 ==========
-*shape name* *points names* ?
-- line is defined by 2 or more
-- circle is defined by 1
+- line is defined by 2 or more points
+- plygon is defined by 3 or more points
 
 Comparables
 ===========
-- Shapes
 - Lines
 - Angles
 
