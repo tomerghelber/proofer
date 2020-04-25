@@ -9,14 +9,14 @@ from ordered_set import OrderedSet
 
 
 @dataclass(unsafe_hash=True)
-class Line:
+class Line(object):
     point1: str
     point2: str
     size: typing.Optional[float] = None
 
 
 @dataclass(unsafe_hash=True)
-class Angle:
+class Angle(object):
     point1: str
     angle_point: str
     point2: str
@@ -40,7 +40,7 @@ def parse_points(points_string: str) -> typing.Sequence[str]:
     parsed = points_string.split(',')
     result = OrderedSet(parsed)
     if len(parsed) != len(result):
-        raise ValueError(f"The same point is used in the element: ${parsed}")
+        raise ValueError(f"The same point is used in the element: {parsed}")
     return result
 
 
