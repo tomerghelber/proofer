@@ -24,6 +24,9 @@ class Vector(Base):
 
     CheckConstraint('start_point != end_point')
 
+    def __repr__(self):
+        return f"Vector({self.start_point}, {self.end_point}, {self.length})"
+
 
 class Angle(Base):
     __tablename__ = "angles"
@@ -38,6 +41,9 @@ class Angle(Base):
     # vector2 = relationship(Vector, foreign_keys=[start_point2, end_point2])
 
     CheckConstraint('start_point1 != start_point2 OR end_point1 != end_point2')
+
+    def __repr__(self):
+        return f"Angle({self.start_point1}, {self.end_point1}, {self.start_point2}, {self.end_point2}, {self.size})"
 
 
 class SqlAlchemyInformation(Information):
