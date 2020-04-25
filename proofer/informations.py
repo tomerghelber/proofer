@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 import contextlib
 
-from sqlalchemy import Column, String, Float, CheckConstraint, ForeignKey
+from sqlalchemy import Column, String, Float, CheckConstraint, ForeignKey, Integer, UniqueConstraint, Index
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship
 
 
 class Information(ABC):
@@ -15,35 +15,49 @@ class Information(ABC):
 Base = declarative_base()
 
 
-class Vector(Base):
+class ProofedObject(Base):
+    __tablename__ = "proofed_objects"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    discriminator = Column(String(50))
+
+    __mapper_args__ = {'polymorphic_on': discriminator}
+
+
+class Vector(ProofedObject):
     __tablename__ = "vectors"
 
-    start_point = Column(String, primary_key=True, nullable=False)
-    end_point = Column(String, primary_key=True, nullable=False)
+    id = Column(Integer, ForeignKey(ProofedObject.id), primary_key=True, autoincrement=True)
+
+    start_point = Column(String, nullable=False)
+    end_point = Column(String, nullable=False)
     length = Column(Float, CheckConstraint('0 <= length'), nullable=True, default=None)
 
+    UniqueConstraint(start_point, end_point)
     CheckConstraint('start_point != end_point')
+    __table_args__ = (Index('vector_point_index', start_point, end_point),)
 
     def __repr__(self):
         return f"Vector({self.start_point}, {self.end_point}, {self.length})"
 
 
-class Angle(Base):
+class Angle(ProofedObject):
     __tablename__ = "angles"
 
-    start_point1 = Column(String, ForeignKey(Vector.start_point), primary_key=True, nullable=False)
-    end_point1 = Column(String, ForeignKey(Vector.end_point), primary_key=True, nullable=False)
-    start_point2 = Column(String, ForeignKey(Vector.start_point), primary_key=True, nullable=False)
-    end_point2 = Column(String, ForeignKey(Vector.end_point), primary_key=True, nullable=False)
+    id = Column(Integer, ForeignKey(ProofedObject.id), primary_key=True, autoincrement=True)
+
+    vector_id1 = Column(Integer, ForeignKey(Vector.id), nullable=False)
+    vector_id2 = Column(Integer, ForeignKey(Vector.id), nullable=False)
     size = Column(Float, CheckConstraint('0 <= size AND size < 360'), nullable=True, default=None)
 
-    # vector1 = relationship(Vector, foreign_keys=[start_point1, end_point1])
-    # vector2 = relationship(Vector, foreign_keys=[start_point2, end_point2])
+    vector1 = relationship(Vector, foreign_keys=vector_id1)
+    vector2 = relationship(Vector, foreign_keys=vector_id2)
 
-    CheckConstraint('start_point1 != start_point2 OR end_point1 != end_point2')
+    UniqueConstraint(vector_id1, vector_id2)
+    CheckConstraint('vector_id1 != vector_id2')
+    __table_args__ = (Index('angle_point_index', vector_id1, vector_id2),)
 
     def __repr__(self):
-        return f"Angle({self.start_point1}, {self.end_point1}, {self.start_point2}, {self.end_point2}, {self.size})"
+        return f"Angle({self.vector1}, {self.vector2}, {self.size})"
 
 
 class SqlAlchemyInformation(Information):
