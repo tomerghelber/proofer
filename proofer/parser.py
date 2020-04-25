@@ -1,65 +1,64 @@
-"""This module holds all the functionality to parse a text into a useful information for the proofer.
+from itertools import chain, combinations
 
-"""
-from dataclasses import dataclass
-from itertools import combinations, chain
-import typing
-
+from lark import Lark, Transformer
 from ordered_set import OrderedSet
 
-
-@dataclass(unsafe_hash=True)
-class Line(object):
-    point1: str
-    point2: str
-    size: typing.Optional[float] = None
+from proofer.informations import Vector, Angle
 
 
-@dataclass(unsafe_hash=True)
-class Angle(object):
-    point1: str
-    angle_point: str
-    point2: str
-    size: typing.Optional[float] = None
+class MYTransformer(Transformer):
+    def point(self, args):
+        return str(args[0])
 
+    def points(self, args):
+        result = OrderedSet(args)
+        if len(args) != len(result):
+            raise ValueError(f"The same point is used in the element: {args}")
+        return result
 
-def is_same_line(l1: Line, l2: Line):
-    return (l1.point1 == l2.point1 and l1.point2 == l2.point2) or (l1.point1 == l2.point2 and l1.point2 == l2.point1)
+    def shape(self, args):
+        shape = args[0]
+        points = args[1]
+        if shape == 'line':
+            if len(points) < 2:
+                raise ValueError("The shape 'line' should have 2 points or more")
+            res = frozenset(chain(
+                map(lambda points: Vector(start_point=points[0], end_point=points[1]), combinations(points, 2)),
+                map(lambda points: Angle(start_point1=points[0], end_point1=points[1],
+                                         start_point2=points[1], end_point2=points[2], size=180), combinations(points, 3)),
+            ))
+            return res
+        elif shape == 'polygon':
+            if len(points) < 3:
+                raise ValueError("The shape 'polygon' should have 3 points or more")
+            res = frozenset(chain(
+                [Vector(start_point=points[i], end_point=points[(i + 1) % len(points)]) for i in range(len(points))],
+                [Angle(start_point1=points[i], end_point1=points[(i + 1) % len(points)],
+                       start_point2=points[(i + 1) % len(points)], end_point2=points[(i + 2) % len(points)])
+                 for i in range(len(points))],
+            ))
+            return res
+        raise ValueError(f"Unknown shape: '{shape}'")
 
+    def start(self, args):
+        return frozenset(chain.from_iterable(args))
 
-def parse_points(points_string: str) -> typing.Sequence[str]:
-    """Parsing points that were arguments for a shape
+grammar = r"""
+start: _NEWLINE* shape (_NEWLINE+ shape)* _NEWLINE*
+shape: SHAPE_TYPE points
+points: point (_POINT_SEPARATOR point)*
+point: WORD
 
-    Args:
-        points_string: A string of points to parse.
+_POINT_SEPARATOR: ","
+SHAPE_TYPE: "line" | "polygon"
 
-    Returns:
-        Sequence of point by their parsed order.
+COMMENT: "#" /[^\n]/*
 
-    """
-    parsed = points_string.split(',')
-    result = OrderedSet(parsed)
-    if len(parsed) != len(result):
-        raise ValueError(f"The same point is used in the element: {parsed}")
-    return result
+%import common (WORD, WS_INLINE)
+%import common.NEWLINE -> _NEWLINE
 
+%ignore COMMENT
+%ignore WS_INLINE
+"""
 
-def parse_line(line: str) -> typing.Set:
-    shape, points_string = line.split()
-    points = parse_points(points_string)
-    if shape == 'line':
-        if len(points) < 2:
-            raise ValueError("The shape 'line' should have 2 points or more")
-        return set(chain(
-            map(lambda points: Line(*points), combinations(points, 2)),
-            map(lambda points: Angle(*points, 180), combinations(points, 3)),
-            points
-        ))
-    elif shape == 'polygon':
-        if len(points) < 3:
-            raise ValueError("The shape 'polygon' should have 3 points or more")
-        return set(chain(
-            [Line(points[i], points[(i + 1) % len(points)]) for i in range(len(points))],
-            [Angle(points[i], points[(i + 1) % len(points)], points[(i + 2) % len(points)]) for i in range(len(points))],
-            points
-        ))
+parser = Lark(grammar, parser="lalr", transformer=MYTransformer())
